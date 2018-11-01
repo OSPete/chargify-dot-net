@@ -116,6 +116,17 @@ namespace ChargifyNET
         public string URL { get; set; }
 
         /// <summary>
+        /// Gets the public page URL for chargify.
+        /// </summary>
+        private string PublicPageURL
+        {
+            get
+            {
+                return this.URL?.Replace("chargify.com", "chargifypay.com");
+            }
+        }
+
+        /// <summary>
         /// SharedKey used for url generation
         /// </summary>
         public string SharedKey { get; set; }
@@ -1196,7 +1207,7 @@ namespace ChargifyNET
             string methodString = string.Format("{0}/{1}/{2}", UpdateShortName, prettyId, token);
             // just in case?
             // methodString = PCLWebUtility.WebUtility.UrlEncode(methodString);
-            string updateUrl = string.Format("{0}{1}{2}", URL?.Replace("chargify.com", "chargifypay.com"), (URL.EndsWith(" / ") ? "" : "/"), methodString);
+            string updateUrl = string.Format("{0}{1}{2}", PublicPageURL, (PublicPageURL.EndsWith(" / ") ? "" : "/"), methodString);
             return updateUrl;
         }
 
@@ -1213,7 +1224,7 @@ namespace ChargifyNET
             string token = message.GetChargifyHostedToken();
             string methodString = string.Format("{0}/{1}/{2}", UpdateShortName, subscriptionId, token);
             // methodString = PCLWebUtility.WebUtility.UrlEncode(methodString);
-            string updateUrl = string.Format("{0}{1}{2}", URL, (URL.EndsWith("/") ? "" : "/"), methodString);
+            string updateUrl = string.Format("{0}{1}{2}", PublicPageURL, (PublicPageURL.EndsWith("/") ? "" : "/"), methodString);
             return updateUrl;
         }
 
@@ -6101,7 +6112,7 @@ namespace ChargifyNET
                         var sanitizedPostData = postData;
 
                         if (!string.IsNullOrEmpty(sanitizedPostData))
-                        {   
+                        {
                             if (sanitizedPostData.Contains("<full_number>"))
                             {
                                 var xdoc = XDocument.Parse(sanitizedPostData);
